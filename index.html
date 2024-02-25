@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Notifier</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h3 {
+        text-align: center;
+        color: #333;
+    }
+
+    .section {
+        margin-bottom: 30px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    label {
+        margin-bottom: 10px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #classResult, #notificationResult {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #notificationLink {
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Class Notifier</h1>
+	<h3>codetestgroup.github.io/ClassNotify</h3>
+    <!-- Section for entering class name -->
+    <section class="section">
+        <h3>Get Class Notification Topic:</h3>
+        <form id="classForm">
+            <label for="className">Class Name:</label>
+            <input type="text" id="className" name="className" placeholder="Enter Class Name">
+            <button type="submit">Submit</button>
+        </form>
+        <div id="classResult"></div>
+    </section>
+
+    <!-- Section for notifying class -->
+    <section class="section">
+        <h3>Send Class Notification:</h3>
+        <form id="notificationForm">
+            <label for="classSelect">Select Class: [CASE sEnSiTiVe]</label>
+            <input type="text" id="classInput" name="classInput" placeholder="Enter Class Name">
+            <label for="notificationType">Type of Notification:</label>
+            <select id="notificationType" name="notificationType">
+                <option value="Homework">Homework</option>
+                <option value="Class">Class</option>
+                <option value="General">General</option>
+            </select>
+            <label for="notificationText">Notification Text:</label>
+            <textarea id="notificationText" name="notificationText" rows="4" placeholder="Enter Notification Text"></textarea>
+            <button type="submit">Send Notification</button>
+        </form>
+        <div id="notificationResult"></div>
+    </section>
+
+    <!-- Section for displaying class notification link -->
+    <div id="notificationLink"></div>
+</div>
+
+<script>
+    // Function to handle form submission for entering class name
+    document.getElementById('classForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var className = document.getElementById('className').value;
+        var classResultElement = document.getElementById('classResult');
+        classResultElement.textContent = "Class Notifications Topic: https://ntfy.sh/" + className;
+    });
+
+    // Function to handle form submission for sending notification
+    document.getElementById('notificationForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var className = document.getElementById('classInput').value;
+        var notificationType = document.getElementById('notificationType').value;
+        var notificationText = document.getElementById('notificationText').value;
+        var notificationResultElement = document.getElementById('notificationResult');
+
+        // Construct notification message
+        var notificationMessage = "Type: " + notificationType + "\nText: " + notificationText;
+
+        // Assuming you have an API endpoint for sending notifications
+        var apiUrl = 'https://ntfy.sh/' + encodeURIComponent(className) + '/publish?message=' + encodeURIComponent(notificationMessage) + '&priority=default';
+
+        // Send notification using fetch API
+        fetch(apiUrl)
+        .then(response => {
+            if (response.ok) {
+               console.log ('Sent Notification!')
+            } else {
+                notificationResultElement.textContent = "Failed to send notification. Please try again later.";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            notificationResultElement.textContent = "Failed to send notification. Please try again later.";
+        });
+
+       // Display class notification link
+        var notificationLinkElement = document.getElementById('notificationLink');
+        notificationLinkElement.textContent = "Sent notification to: https://ntfy.sh/" + className;
+    });
+</script>
+</body>
+</html>
